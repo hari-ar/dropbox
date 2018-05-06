@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Assignment 3 DropBox</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 70%;
+            padding: 10px;
+            margin: 2px;
+
+
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<br id="container">
+<header>
+    <div class="row">
+        <ul>
+            <li style="margin-left: 2%;"> <a  href="http://localhost:8080/" title="DropBox" class="active"> Home</a></li>
+            <li style="margin-left: 2%;"> <a  href="http://localhost:8080/data" title="DropBox" class="active"> Used Space</a></li>
+            <li style=" float:right; margin-right: 2%">
+                {% if user %}
+                <a href='{{ login_logout_url }}'>Logout</a>
+                {% else %}
+                <a href='{{ login_logout_url }}'>Login</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</header>
+<br>
+{% if user %}
+<h4 class="listHeader headerColor">{{ main_header }}</h4>
+</br>
+<div class="row">
+
+    <div class="col-md-10 col-md-offset-2">
+         <p>Data Used is {{ data }} Bytes</p>
+    </div>
+</div>
+{% else %}
+<h4 class="listHeader headerColor">{{ main_header }}</h4>
+{% endif %}
+</section>
+
+</div>
+<script src="js/jquery-3.3.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    // Get the elements with class="column"
+    var elements = document.getElementsByClassName("column");
+
+    // Declare a loop variable
+    var i;
+
+
+</script>
+
+</body>
+
+
+</html>

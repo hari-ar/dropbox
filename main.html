@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Assignment 3 DropBox</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            width: 70%;
+            padding: 10px;
+            margin: 2px;
+
+
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<br id="container">
+<header>
+    <div class="row">
+        <ul>
+            <li style="margin-left: 2%;"> <a  href="http://localhost:8080/" title="DropBox" class="active"> Home</a></li>
+            <li style="margin-left: 2%;"> <a  href="http://localhost:8080/data" title="DropBox" class="active"> Used Space</a></li>
+            <li style=" float:right; margin-right: 2%">
+                {% if user %}
+                <a href='{{ login_logout_url }}'>Logout</a>
+                {% else %}
+                <a href='{{ login_logout_url }}'>Login</a>
+                {% endif %}
+            </li>
+        </ul>
+    </div>
+</header>
+<br>
+{% if user %}
+<h4 class="listHeader headerColor">{{ main_header }}</h4>
+<h4 style="margin-left: 5%">
+    {% if directory_id == user.user_id()+'/'%}
+    Current Directory : /
+    {% else %}
+    Current Directory : {{ directory_id }}
+    {% endif %}
+</h4>
+<div class="col-md-2 col-md-offset-6">
+    {% if directory_id != user.user_id()+'/'%}
+    <form id="back" method="post" action="/">
+        <input type="hidden" name="directory_id" value="{{ parent_directory }}">
+        <a href="#" onclick="document.getElementById('back').submit()">Back</a>
+    </form>
+    {% else %}
+    {% endif %}
+</div>
+<div class="col-md-6 col-md-offset-2">
+    <form method="post" action="addDirectory">
+        <input align="center" type="text" name="directory_name" id="directory_name" placeholder="Create New Directory" required/>
+        <input type="hidden" name="parent_directory" value="{{ directory_id }}">
+        <input  class="btn btn-primary" type="submit" value="Add" name="button"/>
+        <p style="color: red">{{ error_message }}</p>
+    </form>
+    <form method="post" action="{{ upload_url }}" enctype="multipart/form-data">
+        <input type="hidden" name="parent_directory" value="{{ directory_id }}">
+        <label for="file">Please select the file</label>
+        <input style="display: inline-block; margin-left: 4%;"  id="file" type="file" name="file" />
+        <button style="display: inline-block; " class="btn btn-primary" align="center" type="submit">Upload File</button>
+    </form>
+</div>
+</br>
+<div class="row">
+
+    <div class="col-md-10 col-md-offset-2">
+         {% if directory_list or file_list %}
+         {% for each_directory in directory_list %}
+            <form id = "{{ each_directory.directoryId }}" action="/" method="post">
+                </br>
+                <input type="hidden" name="directory_id" value="{{ each_directory.directoryId }}">
+                <input type="hidden" name="parent_directory" value="{{ each_directory.parentDirectory }}">
+                <a href="#" class="column" style="background-color:#aaa;" onclick="document.getElementById('{{ each_directory.directoryId }}').submit()">{{ each_directory.directoryName }}/</a>
+            </form>
+            <form id = "delete" action="/deleteDirectory" method="post">
+                <input type="hidden" name="directory_id" value="{{ each_directory.directoryId }}">
+                <input type="hidden" name="parent_directory" value="{{ each_directory.parentDirectory }}">
+                <input type="submit" name="delete" value="Delete Directory">
+            </form>
+            </br>
+        {% endfor %}
+        {% for each_file in file_list %}
+            <form id = "{{ each_file.fileId }}" action="/download" method="get">
+                </br>
+                <input type="hidden" name="file_id" value="{{ each_file.fileId }}">
+                <input type="hidden" name="parent_directory" value="{{ each_file.parent_directory }}">
+                <a href="#" class="column" style="background-color:#afd9ee;" onclick="document.getElementById('{{ each_file.fileId }}').submit()">{{ each_file.fileName }}</a>
+            </form>
+            <form id = "deleteFile" action="/deleteFile" method="post">
+                <input type="hidden" name="file_id" value="{{ each_file.fileId }}">
+                <input type="hidden" name="parent_directory" value="{{ each_file.parentDirectory }}">
+                <input type="submit" name="delete" value="Delete File">
+            </form>
+            <form id = "renameFile" action="/renameFile" method="post">
+                <input type="hidden" name="file_id" value="{{ each_file.fileId }}">
+                <input type="hidden" name="parent_directory" value="{{ each_file.parentDirectory }}">
+                <input type="text" name="new_name" required>
+                <input type="submit" name="rename" value="Rename File">
+            </form>
+
+        {% endfor %}
+        {% else %}
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<h4 class="listHeader headerColor">{{ main_header }}</h4>
+{% endif %}
+</section>
+<!-- <footer class="footer"> -->
+<!-- <div class="col-12" style="height:30px;"> -->
+<!-- <p style="text-align:center;">Assignment</p>  -->
+<!-- </div> -->
+<!-- </footer> -->
+</div>
+<script src="js/jquery-3.3.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    // Get the elements with class="column"
+    var elements = document.getElementsByClassName("column");
+
+    // Declare a loop variable
+    var i;
+
+
+</script>
+
+</body>
+
+
+</html>
